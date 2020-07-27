@@ -82,6 +82,7 @@ public class AccountService {
     }
 
     public void deleteAccountById (long id){
+        branchRepository.addDeletedAccountToTable(String.valueOf(accountRepository.findById(id).get().getUserCnp()), accountRepository.findById(id).get().getIban());
         accountRepository.deleteById(id);
     }
 
