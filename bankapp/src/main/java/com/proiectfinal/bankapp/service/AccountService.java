@@ -82,8 +82,14 @@ public class AccountService {
     }
 
     public void deleteAccountById (long id){
-        branchRepository.addDeletedAccountToTable(String.valueOf(accountRepository.findById(id).get().getUserCnp()), accountRepository.findById(id).get().getIban());
-        accountRepository.deleteById(id);
+        Account accountToBeDeleted = accountRepository.findById(id).orElseThrow(()->new RuntimeException("The account with the ID " + id + " doesn't exists"));
+        if ((accountToBeDeleted.getBalance().compareTo(BigDecimal.valueOf(0)) == 0)){
+        branchRepository.addDeletedAccountToTable(String.valueOf(accountToBeDeleted.getUserCnp()), accountToBeDeleted.getIban());
+        accountRepository.deleteById(id);}
+        else {
+            System.out.println("Your actual amount of " + accountToBeDeleted.getBalance() + " $, prevents account to be deleted\n" +
+                    "Please withdraw all the amount first");
+        }
     }
 
 
