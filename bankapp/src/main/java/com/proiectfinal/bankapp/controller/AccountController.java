@@ -47,7 +47,14 @@ public class AccountController {
         return accountService.checkBalanceByIban(iban);
     }
     @GetMapping("/{user_cnp}")
+    @ResponseStatus(HttpStatus.OK)
     public List<Account> findAllaccountsByCnp(@PathVariable("user_cnp") long cnp){
         return accountService.findAccountsByCnp(cnp);
     }
+    @GetMapping("balance/{user_cnp}")
+    @ResponseStatus(HttpStatus.OK)
+    public BigDecimal findTotalAmountByCnp (@PathVariable("user_cnp") long cnp){
+        return accountService.findTotalAmountByCnp(cnp);
+    }
+
 }

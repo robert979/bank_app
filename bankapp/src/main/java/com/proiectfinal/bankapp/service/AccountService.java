@@ -4,6 +4,7 @@ import com.proiectfinal.bankapp.domain.Account;
 import com.proiectfinal.bankapp.repository.AccountRepository;
 import com.proiectfinal.bankapp.repository.BranchRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +15,13 @@ import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
+
 public class AccountService {
     private final UserService userService;
     private final AccountRepository accountRepository;
     private final BranchRepository branchRepository;
+
+
 
     public Account createAccount(long userId,Account account){
         account.setUserCnp(userService.findCnpById(userId));
@@ -43,6 +47,15 @@ public class AccountService {
 
     }
 
+    public BigDecimal findTotalAmountByCnp(long cnp){
+        BigDecimal totalAmount = BigDecimal.valueOf(0);
+        for (Account acount: findAccountsByCnp(cnp)){
+            totalAmount.add(acount.getBalance());
+        }
+        System.out.println(totalAmount);
+        return totalAmount;
+    }
+
     public BigDecimal checkBalanceByIban(String iban){
         return findAccountByIban(iban).getBalance();
     }
@@ -51,6 +64,8 @@ public class AccountService {
     public BigDecimal depositInBank (String iban, double amountToDeposit ){
         Account accountToDeposit = findAccountByIban(iban);
         accountToDeposit.setBalance(accountToDeposit.getBalance().add(BigDecimal.valueOf(amountToDeposit)));
+        accountToDeposit.setLastUpdated(LocalDateTime.now());
+
         return accountToDeposit.getBalance();
 }
 
@@ -65,5 +80,7 @@ public class AccountService {
         }
 
     }
+
+
 
 }
