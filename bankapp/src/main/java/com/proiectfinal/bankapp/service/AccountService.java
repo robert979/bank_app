@@ -72,7 +72,7 @@ public class AccountService {
 
     @Transactional
     public void withdrawInBank (String iban, double amountToWithdraw){
-        if (checkBalanceByIban(iban).compareTo(BigDecimal.valueOf(amountToWithdraw))>0){
+        if (checkBalanceByIban(iban).compareTo(BigDecimal.valueOf(amountToWithdraw))>=0){
             Account accountToWithdraw = findAccountByIban(iban);
             accountToWithdraw.setBalance(depositInBank(iban, -amountToWithdraw));
         } else {
