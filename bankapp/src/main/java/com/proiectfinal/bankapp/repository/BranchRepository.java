@@ -18,6 +18,7 @@ import java.sql.*;
 public class BranchRepository {
     private static final String nameIBAN = "RO98INGB0000";
     private static final String ibanTableName = "iban";
+    private static final String deletedAccount = "deleted_account";
 
 
     //metode  t_IBAN
@@ -112,6 +113,16 @@ public class BranchRepository {
         return str;
 
     }
+    @SneakyThrows
+    public void addDeletedAccountToTable(String cnp, String iban){
+        String query = "Insert into " + deletedAccount + " (cnp ,u_iban) values (?,?)";
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        preparedStatement.setString(1, cnp);
+        preparedStatement.setString(2, iban);
+
+        preparedStatement.executeUpdate();
+
+    }
 
     private PreparedStatement getPreparedStatement(String query) {
         try {
@@ -126,14 +137,18 @@ public class BranchRepository {
         }
     }
 
+
     public static void main(String[] args) {
         BranchRepository branchRepository = new BranchRepository();
         //System.out.println(branchRepository.generateNewIban());
 
-       branchRepository.generateIbanForAccount();
+       //branchRepository.generateIbanForAccount();
 
+       branchRepository.addDeletedAccountToTable("1800101021922","RO98INGB0000100100100113");
 
     }
+
+
 
 }
 

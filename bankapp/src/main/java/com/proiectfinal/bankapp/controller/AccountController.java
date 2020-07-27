@@ -57,4 +57,11 @@ public class AccountController {
         return accountService.findTotalAmountByCnp(cnp);
     }
 
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAccountById (@PathVariable ("id")long id){
+        accountService.deleteAccountById(id);
+    }
+
+
 }
