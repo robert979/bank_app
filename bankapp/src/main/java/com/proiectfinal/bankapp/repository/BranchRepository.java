@@ -113,6 +113,7 @@ public class BranchRepository {
         return str;
 
     }
+    //* add deleted account details (cnp & iban) to deleted_account table;
     @SneakyThrows
     public void addDeletedAccountToTable(String cnp, String iban){
         String query = "Insert into " + deletedAccount + " (cnp ,u_iban) values (?,?)";
