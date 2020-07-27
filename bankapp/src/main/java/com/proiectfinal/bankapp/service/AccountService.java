@@ -36,6 +36,13 @@ public class AccountService {
         return ibanAccount.get(0);
     }
 
+    public List<Account> findAccountsByCnp(long cnp){
+        return findAllAccounts().stream()
+                .filter(account -> account.getUserCnp()==cnp)
+                .collect(Collectors.toList());
+
+    }
+
     public BigDecimal checkBalanceByIban(String iban){
         return findAccountByIban(iban).getBalance();
     }
@@ -47,16 +54,6 @@ public class AccountService {
         return accountToDeposit.getBalance();
 }
 
-    /* @Transactional
-    public void withdrawInBank (String iban, double amountToWithdraw){
-        if (checkBalanceByIban(iban).compareTo(BigDecimal.valueOf(amountToWithdraw))>0){
-        Account accountToWithdraw = findAccountByIban(iban);
-        accountToWithdraw.setBalance(accountToWithdraw.getBalance().subtract(BigDecimal.valueOf(amountToWithdraw)));
-        } else {
-            System.out.println("Insufficient money \nWithdraw aborted");
-        }
-     }
-            */
 
     @Transactional
     public void withdrawInBank (String iban, double amountToWithdraw){

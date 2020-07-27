@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
@@ -40,20 +41,13 @@ public class AccountController {
         System.out.println("The new amount for account no " + iban + " is " + accountService.checkBalanceByIban(iban) + " $");
     }
 
-
-
-   /* @PutMapping ("/deposits/{iban}")
-
-    public void withdraw (@PathVariable("iban") String iban,@RequestParam("depositAmount") double depositAmount,  @RequestBody Account account ){
-double temp = -depositAmount;
-        accountService.depositInBank(iban,temp);
-        System.out.println("the new amount for account no " + iban + " is " + accountService.checkBalanceByIban(iban) + " $");
-    }
-
-    */
     @GetMapping("/balance/{iban}")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal checkBalanceByIban (@PathVariable("iban") String iban){
         return accountService.checkBalanceByIban(iban);
+    }
+    @GetMapping("/{user_cnp}")
+    public List<Account> findAllaccountsByCnp(@PathVariable("user_cnp") long cnp){
+        return accountService.findAccountsByCnp(cnp);
     }
 }

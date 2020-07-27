@@ -23,13 +23,17 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="72fb7b79-76ab-4801-8581-250dfb44b116">
+        <schema name="bank" object-types="view, table, procedure, function" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="72fb7b79-76ab-4801-8581-250dfb44b116">
-      <console name="Connection" type="STANDARD" schema="bank" session="Main"><![CDATA[select * from `user`;
+      <console name="Connection" type="STANDARD" schema="bank" session="Main">select * from `user`;
 select *from account;
-select *from iban;]]></console>
+select *from iban;</console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
