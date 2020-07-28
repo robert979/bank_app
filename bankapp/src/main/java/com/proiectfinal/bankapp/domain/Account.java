@@ -24,6 +24,7 @@ public class Account {
     private long userCnp;
     private String iban;
     private BigDecimal balance;
+    private LocalDateTime creationDate;
 
     @LastModifiedDate
     private LocalDateTime lastUpdated;
