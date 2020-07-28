@@ -49,6 +49,14 @@ public class CardService {
                 .min()
                 .getAsLong();
 
-
     }
+    public boolean checkIfCardIsActive (long cardNumber){
+        if (findStatusById(findCardIdByCarNumber(cardNumber)).equals(Status.ACTIVE)){
+            return true;
+        }
+       else {
+           return false;
+        }
+    }
+
 }

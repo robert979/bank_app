@@ -31,6 +31,15 @@ public class CardController {
     public long findIdByCardNumber(@PathVariable("cardNumber")long cardNumber){
         return cardService.findCardIdByCarNumber(cardNumber);
     }
+    @GetMapping("/status/{cardNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public Status checkCardStatus(@PathVariable("cardNumber") long cardNumber){
+        if (cardService.checkIfCardIsActive(cardNumber)){
+            return Status.ACTIVE;
+        }else {
+            return Status.BLOCKED;
+        }
+    }
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
