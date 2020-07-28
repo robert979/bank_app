@@ -51,11 +51,7 @@ public class AccountController {
     public List<Account> findAllaccountsByCnp(@PathVariable("user_cnp") long cnp){
         return accountService.findAccountsByCnp(cnp);
     }
-    @GetMapping("balance/{user_cnp}")
-    @ResponseStatus(HttpStatus.OK)
-    public BigDecimal findTotalAmountByCnp (@PathVariable("user_cnp") long cnp){
-        return accountService.findTotalAmountByCnp(cnp);
-    }
+
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

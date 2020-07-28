@@ -47,14 +47,7 @@ public class AccountService {
 
     }
 
-    public BigDecimal findTotalAmountByCnp(long cnp){
-        BigDecimal totalAmount = BigDecimal.valueOf(0);
-        for (Account acount: findAccountsByCnp(cnp)){
-            totalAmount.add(acount.getBalance());
-        }
-        System.out.println(totalAmount);
-        return totalAmount;
-    }
+
 
     public BigDecimal checkBalanceByIban(String iban){
         return findAccountByIban(iban).getBalance();
