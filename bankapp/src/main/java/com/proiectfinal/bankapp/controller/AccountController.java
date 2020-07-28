@@ -51,6 +51,11 @@ public class AccountController {
     public List<Account> findAllaccountsByCnp(@PathVariable("user_cnp") long cnp){
         return accountService.findAccountsByCnp(cnp);
     }
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Account> findAllAccounts (){
+        return accountService.findAllAccounts();
+    }
 
 
     @DeleteMapping("/delete/{id}")
