@@ -35,7 +35,8 @@
 select *from account;
 select *from iban;
 select *from deleted_account;
-select *from card_number;]]></console>
+select *from card_number;
+select *from card;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
