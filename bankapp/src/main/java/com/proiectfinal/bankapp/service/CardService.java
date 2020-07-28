@@ -35,4 +35,9 @@ public class CardService {
         newCard.setLastUpdated(LocalDateTime.now());
         return cardRepository.save(newCard);
     }
+    public Status findStatusById (long id){
+        Card card = cardRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("The account with the id " + id + " does not exists"));
+        return card.getStatus();
+    }
 }
