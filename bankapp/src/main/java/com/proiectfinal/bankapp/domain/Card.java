@@ -25,7 +25,7 @@ public class Card {
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDateTime creationDate;
-    //private LocalDateTime lastUpdated;
+    private LocalDateTime lastUpdated;
 
 
 }
