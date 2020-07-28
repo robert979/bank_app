@@ -17,6 +17,13 @@ public class CardController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Card> findAllCards(){ return cardService.findAllCards();}
+    public List<Card> findAllCards() {
+        return cardService.findAllCards();
+    }
 
+    @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Card create(@PathVariable("id") long accountId, @RequestBody Card card) {
+        return cardService.createNewCard(accountId);
+    }
 }

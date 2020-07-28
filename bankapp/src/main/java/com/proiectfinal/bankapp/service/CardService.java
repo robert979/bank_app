@@ -1,19 +1,38 @@
 package com.proiectfinal.bankapp.service;
 
+import com.proiectfinal.bankapp.domain.Account;
 import com.proiectfinal.bankapp.domain.Card;
+import com.proiectfinal.bankapp.domain.Status;
+import com.proiectfinal.bankapp.domain.User;
+import com.proiectfinal.bankapp.repository.AccountRepository;
 import com.proiectfinal.bankapp.repository.BranchRepository;
 import com.proiectfinal.bankapp.repository.CardRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class CardService {
     private final CardRepository cardRepository;
+    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final BranchRepository branchRepository;
 
     public List<Card> findAllCards (){ return cardRepository.findAll();
+    }
+
+    public Card createNewCard (long id){
+        Account account = accountRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("The account with the id " + id + " desn't exists"));
+        Card newCard = new Card();
+        newCard.setIban(account.getIban());
+        newCard.setCardNumber(branchRepository.passNewCardNumberToNewCard());
+        newCard.setPin(1234);
+        newCard.setStatus(Status.ACTIVE);
+        newCard.setLastUpdated(LocalDateTime.now());
+        return cardRepository.save(newCard);
     }
 }
