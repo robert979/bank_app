@@ -19,11 +19,12 @@ public class BranchRepository {
     private static final String nameIBAN = "RO98INGB0000";
     private static final String ibanTableName = "iban";
     private static final String deletedAccount = "deleted_account";
+    private static final String cardNumberTable = "card_number";
 
 
-    //metode  t_IBAN
+    //metode  IBAN
 // --> creeaza automat un IBAN nou pe care il adauga la coada tabelului
-// -->sterge primul IBAN din lista (cu ID-ul cel mai mic) care va fi pasat catre t_user
+// -->sterge primul IBAN din lista (cu ID-ul cel mai mic) care va fi pasat catre tabel account
 
     @SneakyThrows
     public Integer findFirstIbanId() {
@@ -50,7 +51,7 @@ public class BranchRepository {
         BranchRepository branchRepository = new BranchRepository();
         Long a = 0L;
         String b = new String();
-        String query = "select no_iban from " + ibanTableName + " where id=+" + branchRepository.findFirstIbanId();
+        String query = "select no_iban from " + ibanTableName + " where id=" + branchRepository.findFirstIbanId();
         PreparedStatement preparedStatement = getPreparedStatement(query);
 
         ResultSet rs = preparedStatement.executeQuery();
@@ -80,7 +81,7 @@ public class BranchRepository {
     private long generateNewIban() {
         BranchRepository branchRepository = new BranchRepository();
         long a = 0;
-        String query = "select no_Iban from "+ibanTableName+" where id=" + branchRepository.findLastIbanId();
+        String query = "select no_Iban from " + ibanTableName + " where id=" + branchRepository.findLastIbanId();
         PreparedStatement preparedStatement = getPreparedStatement(query);
         ResultSet rs = preparedStatement.executeQuery();
 
@@ -92,13 +93,13 @@ public class BranchRepository {
     }
 
     @SneakyThrows
-    private void saveNewIban (){
+    private void saveNewIban() {
         BranchRepository branchRepository = new BranchRepository();
-        String query = "insert into "+ ibanTableName + "(name_iban, no_iban) values (\'" + nameIBAN +
-                "\', "+branchRepository.generateNewIban() +")";
+        String query = "insert into " + ibanTableName + "(name_iban, no_iban) values (\'" + nameIBAN +
+                "\', " + branchRepository.generateNewIban() + ")";
         PreparedStatement preparedStatement = getPreparedStatement(query);
 
-       preparedStatement.executeUpdate();
+        preparedStatement.executeUpdate();
 
 
     }
@@ -113,9 +114,10 @@ public class BranchRepository {
         return str;
 
     }
+
     //* add deleted account details (cnp & iban) to deleted_account table;
     @SneakyThrows
-    public void addDeletedAccountToTable(String cnp, String iban){
+    public void addDeletedAccountToTable(String cnp, String iban) {
         String query = "Insert into " + deletedAccount + " (cnp ,u_iban) values (?,?)";
         PreparedStatement preparedStatement = getPreparedStatement(query);
         preparedStatement.setString(1, cnp);
@@ -123,6 +125,87 @@ public class BranchRepository {
 
         preparedStatement.executeUpdate();
 
+    }
+    // generate new card numbers using card_number table -->delete the first one, which will be sent to card table
+    //and adds a new card number at the end
+
+    public Long passNewCardNumberToNewCard() {
+        Long card_number = findFirstCardNumber();
+        saveNewCardNumber();
+        deleteFirstCardNumber();
+        return card_number;
+    }
+
+    @SneakyThrows
+    private void deleteFirstCardNumber() {
+        String query = "delete from " + cardNumberTable + " where id =" + findFirstIdCardNumber();
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        preparedStatement.executeUpdate();
+
+    }
+
+    @SneakyThrows
+    private void saveNewCardNumber() {
+        String query = " insert into " + cardNumberTable + " (card_number) values (" + generateNewCardNumber() + ")";
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        preparedStatement.executeUpdate();
+
+    }
+
+    @SneakyThrows
+    private long generateNewCardNumber() {
+        long card_number = 0L;
+        String query = "select card_number from " + cardNumberTable + " where id = " + findLastIdCardNumber();
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            card_number = rs.getLong("card_number");
+        }
+        return card_number + 1;
+    }
+
+    @SneakyThrows
+    private int findLastIdCardNumber() {
+        int id = 0;
+        String query = "Select max(id) from " + cardNumberTable;
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            id = rs.getInt("max(id)");
+        }
+        return id;
+    }
+
+    @SneakyThrows
+    private long findFirstCardNumber() {
+        long card_number = 0L;
+        String query = "select card_number from " + cardNumberTable + " where id=" + findFirstIdCardNumber();
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        while (rs.next()) {
+            card_number = rs.getLong("card_number");
+        }
+        return card_number;
+    }
+
+    @SneakyThrows
+    private int findFirstIdCardNumber() {
+        int id = 0;
+        String query = "select min(id) from " + cardNumberTable;
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        while (rs.next()) {
+            id = rs.getInt("min(id)");
+        }
+        return id;
+    }
+
+    public long cardNumberToBeUsed(int id) {
+        return 0;
     }
 
     private PreparedStatement getPreparedStatement(String query) {
@@ -140,15 +223,9 @@ public class BranchRepository {
 
 
     public static void main(String[] args) {
-        BranchRepository branchRepository = new BranchRepository();
-        //System.out.println(branchRepository.generateNewIban());
 
-       //branchRepository.generateIbanForAccount();
-
-       branchRepository.addDeletedAccountToTable("1800101021922","RO98INGB0000100100100113");
 
     }
-
 
 
 }

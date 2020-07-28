@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="72fb7b79-76ab-4801-8581-250dfb44b116">
-        <schema name="bank" object-types="view, procedure, function, table, constraint, index, dataset trigger, column" />
+        <schema name="bank" object-types="table, view, function, procedure" />
       </connection>
     </loaded-nodes>
   </component>
@@ -34,7 +34,8 @@
       <console name="Connection" type="STANDARD" schema="bank" session="Main"><![CDATA[select * from `user`;
 select *from account;
 select *from iban;
-select *from deleted_account;]]></console>
+select *from deleted_account;
+select *from card_number;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
