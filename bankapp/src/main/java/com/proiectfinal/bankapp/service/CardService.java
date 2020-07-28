@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -39,5 +40,15 @@ public class CardService {
         Card card = cardRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("The account with the id " + id + " does not exists"));
         return card.getStatus();
+    }
+    public long findCardIdByCarNumber (long cardNumber){
+        return findAllCards()
+                .stream()
+                .filter(card -> card.getCardNumber()==cardNumber)
+                .mapToLong(card -> card.getId())
+                .min()
+                .getAsLong();
+
+
     }
 }

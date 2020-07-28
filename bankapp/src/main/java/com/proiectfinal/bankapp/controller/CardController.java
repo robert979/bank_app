@@ -26,6 +26,11 @@ public class CardController {
     public Status checkStatusById (@PathVariable("id")long id){
         return cardService.findStatusById(id);
     }
+    @GetMapping("/cardNumber/{cardNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public long findIdByCardNumber(@PathVariable("cardNumber")long cardNumber){
+        return cardService.findCardIdByCarNumber(cardNumber);
+    }
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
