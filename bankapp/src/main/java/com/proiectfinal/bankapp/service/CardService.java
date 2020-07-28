@@ -42,14 +42,21 @@ public class CardService {
         return card.getStatus();
     }
     public long findCardIdByCarNumber (long cardNumber){
-        return findAllCards()
+       List<Card> listCards = findAllCards()
                 .stream()
                 .filter(card -> card.getCardNumber()==cardNumber)
-                .mapToLong(card -> card.getId())
-                .min()
-                .getAsLong();
+               .collect(Collectors.toList());
+
+       return listCards.get(0).getId();
 
     }
+
+
+  /* public long findCardIdByCarNumber (long cardNumber){
+       return cardRepository.findIdByCardNumber(cardNumber);
+   }
+
+   */
     public boolean checkIfCardIsActive (long cardNumber){
         if (findStatusById(findCardIdByCarNumber(cardNumber)).equals(Status.ACTIVE)){
             return true;
