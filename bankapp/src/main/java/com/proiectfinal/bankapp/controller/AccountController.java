@@ -42,12 +42,19 @@ public class AccountController {
         accountService.withdrawInBank(iban, withdraw);
         System.out.println("The new amount for account no " + iban + " is " + accountService.checkBalanceByIban(iban) + " $");
     }
-  @PutMapping("/withdraw/pos/{cardNumber}")
+
+    @PutMapping("/withdraw/pos/{cardNumber}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void withdrawAtPos(@PathVariable("cardNumber")long cardNumber, @RequestParam("withdraw") long withdraw,
                               @RequestParam("pin") int pin, @RequestBody Account account){
         accountService.withdrawAtPos(cardNumber, pin, withdraw);
         System.out.println("The new amount for your account now is " + accountService.checkBalanceByIban(cardService.findIbanByCardNumber(cardNumber)) + " $");
+    }
+    @PutMapping("/transfer/{amountToTransfer}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transfer(@PathVariable("amountToTransfer") double amountToTransfer, @RequestParam("ibanFrom") String ibanFrom,
+                         @RequestParam("ibanTo")String ibanTo, @RequestBody Account account){
+        accountService.transferMoney(ibanFrom, ibanTo, amountToTransfer);
     }
 
     @GetMapping("/balance/{iban}")
