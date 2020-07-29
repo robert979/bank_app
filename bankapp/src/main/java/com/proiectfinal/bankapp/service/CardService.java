@@ -8,11 +8,14 @@ import com.proiectfinal.bankapp.repository.AccountRepository;
 import com.proiectfinal.bankapp.repository.BranchRepository;
 import com.proiectfinal.bankapp.repository.CardRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,16 +46,12 @@ public class CardService {
                 .orElseThrow(()->new RuntimeException("The account with the id " + id + " does not exists"));
         return card.getStatus();
     }
-    public long findCardIdByCarNumber (long cardNumber){
-       List<Card> listCards = findAllCards()
-                .stream()
-                .filter(card -> card.getCardNumber()==cardNumber)
-               .collect(Collectors.toList());
 
-       return listCards.get(0).getId();
-
+    public  long findCardIdByCarNumber (long cardNumber){
+      return findAllCards().stream()
+               .collect(Collectors.toMap(Card::getCardNumber, Card::getId))
+               .get(cardNumber);
     }
-
 
 
     @Transactional
