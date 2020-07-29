@@ -24,7 +24,11 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        if (validateCNP(user.getCnp())){
+        return userRepository.save(user);}
+        else {
+            return null;
+        }
     }
 
     public List<User> findAllUsers() {
@@ -38,8 +42,18 @@ public class UserService {
         userToBeUpdated.setLastName(user.getLastName());
         userToBeUpdated.setFirstName(user.getFirstName());
         userToBeUpdated.setCnp(user.getCnp());
-        ;
     }
+
+    public boolean validateCNP (long cnp){
+        if (String.valueOf(cnp).length()!=13 || !String.valueOf(1256).contains(String.valueOf(cnp).substring(0, 1))){
+            System.out.println("The User was not created --> invalid CNP format\n" +
+                    "Please try again");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
 }
 
 

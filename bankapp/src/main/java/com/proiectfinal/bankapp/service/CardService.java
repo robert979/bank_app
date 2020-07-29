@@ -1,4 +1,5 @@
 package com.proiectfinal.bankapp.service;
+
 import com.proiectfinal.bankapp.domain.Account;
 import com.proiectfinal.bankapp.domain.Card;
 import com.proiectfinal.bankapp.domain.Status;
@@ -8,6 +9,7 @@ import com.proiectfinal.bankapp.repository.CardRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public class CardService {
     private final AccountRepository accountRepository;
     private final BranchRepository branchRepository;
     private static int flag = 0;
-    private static long tempCard=0;
+    private static long tempCard = 0;
 
     public List<Card> findAllCards() {
         return cardRepository.findAll();
@@ -77,6 +79,23 @@ public class CardService {
             flag = flag + 1;
         }
     }
+    @Transactional
+    public void changePin (long cardNumber, int initialPin,int newPin, int newPinAgain){
+        Card cardToChangePin = findCardByCardNumber(cardNumber);
+        if (cardToChangePin.getPin() == initialPin && initialPin !=newPin){
+            if (newPin == newPinAgain){
+                cardToChangePin.setPin(newPin);
+                System.out.println("The Pin was successfully changed \n" +
+                        "The new pin number is " + cardToChangePin.getPin());
+            } else {
+                System.out.println("Your new pin does not match with the retyped new pin\n" +
+                        "Please try again");
+            }
+        }else {
+            System.out.println("You must provide the right existing pin, and this must be different from the new pin\n" +
+                    "Please try again");
+        }
+    }
 
     public boolean checkIfCardIsActive(long cardNumber) {
         if (findStatusById(findCardIdByCarNumber(cardNumber)).equals(Status.ACTIVE)) {
@@ -103,7 +122,7 @@ public class CardService {
                 return true;
             } else {
                 System.out.println("The pin it's incorrect, please try again " + flag);
-                   return false;
+                return false;
             }
         } else {
             System.out.println("Your Card with the Card Number " + cardNumber + " is blocked\n" +

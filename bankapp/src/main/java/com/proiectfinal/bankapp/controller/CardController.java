@@ -56,6 +56,14 @@ public class CardController {
     public  void unblockCardByCardNumber(@PathVariable("cardNumber") long cardNumber, @RequestBody Card card){
         cardService.unblockCard(cardNumber);
     }
+
+    @PutMapping("/pin/{cardNumber}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void changePin (@PathVariable ("cardNumber") long cardNumber, @RequestParam("initialPin") int initialPin,
+                           @RequestParam("newPin") int newPin, @RequestParam("newPinAgain") int newPinAgain, @RequestBody Card card){
+        cardService.changePin(cardNumber, initialPin, newPin, newPinAgain);
+    }
+
     @DeleteMapping("/delete/{cardNumber}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCardByCardNumber (@PathVariable("cardNumber") long cardNumber){
