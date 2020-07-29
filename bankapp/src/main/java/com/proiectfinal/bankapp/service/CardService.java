@@ -48,12 +48,9 @@ public class CardService {
     }
 
     public  long findCardIdByCarNumber (long cardNumber){
-        List<Card> listCards = findAllCards()
-                .stream()
-                .filter(card -> card.getCardNumber()==cardNumber)
-                .collect(Collectors.toList());
-
-        return listCards.get(0).getId();
+        return findAllCards().stream()
+                .collect(Collectors.toMap(Card::getCardNumber, Card::getId))
+                .get(cardNumber);
     }
 
 
