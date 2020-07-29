@@ -20,6 +20,7 @@ public class AccountService {
     private final UserService userService;
     private final AccountRepository accountRepository;
     private final BranchRepository branchRepository;
+    private final CardService cardService;
 
 
 
@@ -44,10 +45,7 @@ public class AccountService {
         return findAllAccounts().stream()
                 .filter(account -> account.getUserCnp()==cnp)
                 .collect(Collectors.toList());
-
     }
-
-
 
     public BigDecimal checkBalanceByIban(String iban){
         return findAccountByIban(iban).getBalance();
@@ -73,6 +71,19 @@ public class AccountService {
         }
 
     }
+    @Transactional
+    public void withdrawAtPos(long cardNumber, int pin, long withdrawAmount){
+        if (cardService.checkIfOkForWithdraw(cardNumber, pin)){
+            if (withdrawAmount%10==0 && withdrawAmount>0){
+                withdrawInBank(cardService.findIbanByCardNumber(cardNumber), withdrawAmount);
+            }else {
+                System.out.println("The withdraw amount must a positive value, multiple of 10\n" +
+                        "Please try again");
+            }
+        }
+    }
+
+
 
     public void deleteAccountById (long id){
         Account accountToBeDeleted = accountRepository.findById(id).orElseThrow(()->new RuntimeException("The account with the ID " + id + " doesn't exists"));

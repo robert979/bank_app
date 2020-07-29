@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
-    private final AccountService accountService;
+    //private final AccountService accountService;
     private final BranchRepository branchRepository;
     private static int flag=0;
 
@@ -32,7 +32,7 @@ public class CardService {
 
     public Card createNewCard (long id){
         Account account = accountRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("The account with the id " + id + " desn't exists"));
+                .orElseThrow(()->new RuntimeException("The account with the id " + id + " doesn't exists"));
         Card newCard = new Card();
         newCard.setIban(account.getIban());
         newCard.setCardNumber(branchRepository.passNewCardNumberToNewCard());
@@ -48,9 +48,12 @@ public class CardService {
     }
 
     public  long findCardIdByCarNumber (long cardNumber){
-      return findAllCards().stream()
-               .collect(Collectors.toMap(Card::getCardNumber, Card::getId))
-               .get(cardNumber);
+        List<Card> listCards = findAllCards()
+                .stream()
+                .filter(card -> card.getCardNumber()==cardNumber)
+                .collect(Collectors.toList());
+
+        return listCards.get(0).getId();
     }
 
 
@@ -89,6 +92,33 @@ public class CardService {
        else {
            return false;
         }
+    }
+    public Card findCardByCardNumber(long cardNumber){
+
+        List<Card> listCards = findAllCards()
+                .stream()
+                .filter(card -> card.getCardNumber()==cardNumber)
+                .collect(Collectors.toList());
+
+        return listCards.get(0);
+
+    }
+    public boolean checkIfOkForWithdraw(long cardNumber, int pin){
+        if (checkIfCardIsActive(cardNumber)){
+            if (findCardByCardNumber(cardNumber).getPin()==pin){
+                return true;
+            }else {
+                System.out.println("The pin it's incorrect, please try again");
+                return false;
+            }
+        }else {
+            System.out.println("Your Card with the Card Number "+ cardNumber + " is blocked\n" +
+                    "The withdraw operation was aborted");
+            return false;
+        }
+    }
+    public String findIbanByCardNumber (long cardNumber){
+        return findCardByCardNumber(cardNumber).getIban();
     }
 
 }

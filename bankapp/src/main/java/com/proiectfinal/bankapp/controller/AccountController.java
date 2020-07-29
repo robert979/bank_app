@@ -4,6 +4,7 @@ import com.proiectfinal.bankapp.domain.Account;
 import com.proiectfinal.bankapp.domain.User;
 import com.proiectfinal.bankapp.repository.BranchRepository;
 import com.proiectfinal.bankapp.service.AccountService;
+import com.proiectfinal.bankapp.service.CardService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class AccountController {
     private final AccountService accountService;
+    private final CardService cardService;
 
 
     @PostMapping ("/{id}")
@@ -39,6 +41,13 @@ public class AccountController {
     public void withdraw (@PathVariable("iban") String iban, @RequestParam("withdraw") double withdraw, @RequestBody Account account){
         accountService.withdrawInBank(iban, withdraw);
         System.out.println("The new amount for account no " + iban + " is " + accountService.checkBalanceByIban(iban) + " $");
+    }
+  @PutMapping("/withdraw/pos/{cardNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void withdrawAtPos(@PathVariable("cardNumber")long cardNumber, @RequestParam("withdraw") long withdraw,
+                              @RequestParam("pin") int pin, @RequestBody Account account){
+        accountService.withdrawAtPos(cardNumber, pin, withdraw);
+        System.out.println("The new amount for your account now is " + accountService.checkBalanceByIban(cardService.findIbanByCardNumber(cardNumber)) + " $");
     }
 
     @GetMapping("/balance/{iban}")
