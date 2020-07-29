@@ -20,6 +20,7 @@ public class BranchRepository {
     private static final String ibanTableName = "iban";
     private static final String deletedAccount = "deleted_account";
     private static final String cardNumberTable = "card_number";
+    private static final String deletedCard = "deleted_card";
 
 
     //metode  IBAN
@@ -124,7 +125,16 @@ public class BranchRepository {
         preparedStatement.setString(2, iban);
 
         preparedStatement.executeUpdate();
+    }
+    //add deleted card details (iban & card number) to deleted_card table;
+    @SneakyThrows
+    public void addDeletedCardToTable(String iban, long cardNumber){
+        String query = "insert into " + deletedCard + "(u_iban, card_number) values (?, ?) ";
+        PreparedStatement preparedStatement =getPreparedStatement(query);
+        preparedStatement.setString(1, iban);
+        preparedStatement.setLong(2, cardNumber);
 
+        preparedStatement.executeUpdate();
     }
     // generate new card numbers using card_number table -->delete the first one, which will be sent to card table
     //and adds a new card number at the end

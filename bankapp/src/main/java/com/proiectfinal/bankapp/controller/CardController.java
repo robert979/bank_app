@@ -56,5 +56,9 @@ public class CardController {
     public  void unblockCardByCardNumber(@PathVariable("cardNumber") long cardNumber, @RequestBody Card card){
         cardService.unblockCard(cardNumber);
     }
+    @DeleteMapping("/delete/{cardNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCardByCardNumber (@PathVariable("cardNumber") long cardNumber){
+        cardService.deleteCardByCardNumber(cardNumber);}
 
 }
