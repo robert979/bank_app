@@ -46,5 +46,15 @@ public class CardController {
     public Card create(@PathVariable("id") long accountId, @RequestBody Card card) {
         return cardService.createNewCard(accountId);
     }
+    @PutMapping("/block/{cardNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void blockCardByCardNumber(@PathVariable("cardNumber") long cardNumber, @RequestBody Card card){
+        cardService.blockCard(cardNumber);
+    }
+    @PutMapping("/unblock/{cardNumber}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public  void unblockCardByCardNumber(@PathVariable("cardNumber") long cardNumber, @RequestBody Card card){
+        cardService.unblockCard(cardNumber);
+    }
 
 }

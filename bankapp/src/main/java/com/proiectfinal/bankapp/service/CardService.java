@@ -9,6 +9,7 @@ import com.proiectfinal.bankapp.repository.BranchRepository;
 import com.proiectfinal.bankapp.repository.CardRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CardService {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final BranchRepository branchRepository;
+    private static int flag=0;
 
     public List<Card> findAllCards (){ return cardRepository.findAll();
     }
@@ -52,11 +54,35 @@ public class CardService {
     }
 
 
-  /* public long findCardIdByCarNumber (long cardNumber){
-       return cardRepository.findIdByCardNumber(cardNumber);
-   }
 
-   */
+    @Transactional
+    public void  blockCard (long cardNumber){
+        Card cardToBeBlocked = cardRepository.findById(findCardIdByCarNumber(cardNumber))
+                .orElseThrow(() -> new RuntimeException("The Card with the Card Number" + cardNumber + " is not valid"));
+        if(checkIfCardIsActive(cardNumber)) {
+            cardToBeBlocked.setStatus(Status.BLOCKED);
+            cardToBeBlocked.setLastUpdated(LocalDateTime.now());
+        }else {
+            System.out.println("The Card with the Card Number + " + cardNumber + " is already Blocked " + flag);
+            flag=flag+1;
+        }
+    }
+
+    @Transactional
+    public void unblockCard (long cardNumber) {
+
+        Card cardToBeUnblocked = cardRepository.findById(findCardIdByCarNumber(cardNumber))
+                .orElseThrow(() -> new RuntimeException("The Card with the Card Number" + cardNumber + " is not valid"));
+        if (!checkIfCardIsActive(cardNumber)){
+            cardToBeUnblocked.setStatus(Status.ACTIVE);
+            cardToBeUnblocked.setLastUpdated(LocalDateTime.now());
+
+        }else {
+            System.out.println ("The Card with the Card Number + " + cardNumber + " is already Active " + flag);
+            flag=flag+1;
+        }
+    }
+
     public boolean checkIfCardIsActive (long cardNumber){
         if (findStatusById(findCardIdByCarNumber(cardNumber)).equals(Status.ACTIVE)){
             return true;
