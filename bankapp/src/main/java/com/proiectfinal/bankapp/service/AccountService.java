@@ -84,13 +84,17 @@ public class AccountService {
 
     @Transactional
     public void withdrawAtPos(long cardNumber, int pin, long withdrawAmount) {
-        if (cardService.checkIfOkForWithdraw(cardNumber, pin)) {
-            if (withdrawAmount % 10 == 0 && withdrawAmount > 0) {
-                withdrawInBank(cardService.findIbanByCardNumber(cardNumber), withdrawAmount);
-            } else {
-                System.out.println("The withdraw amount must a positive value, multiple of 10\n" +
-                        "Please try again");
+        if (cardService.checkExpirationDate(cardNumber)) {
+            if (cardService.checkIfOkForWithdraw(cardNumber, pin)) {
+                if (withdrawAmount % 10 == 0 && withdrawAmount > 0) {
+                    withdrawInBank(cardService.findIbanByCardNumber(cardNumber), withdrawAmount);
+                } else {
+                    System.out.println("The withdraw amount must a positive value, multiple of 10\n" +
+                            "Please try again");
+                }
             }
+        }else{
+            System.out.println("The withdraw can't be processed");
         }
     }
 
