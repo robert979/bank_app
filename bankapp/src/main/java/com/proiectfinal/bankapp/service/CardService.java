@@ -45,16 +45,21 @@ public class CardService {
         return card.getStatus();
     }
 
-    public long findCardIdByCarNumber(long cardNumber) {
-        return findAllCards().stream()
-                .collect(Collectors.toMap(Card::getCardNumber, Card::getId))
-                .get(cardNumber);
+    public long findCardIdByCardNumber(long cardNumber) {
+        long id= branchRepository.findIdByCardNumber(cardNumber);
+        if (id!=0){
+            return id;
+        } else {
+            System.out.println("The card number you have provided is not valid\n" +
+                    "Please try again");
+            return 99999999999999L;
+        }
     }
 
 
     @Transactional
     public void blockCard(long cardNumber) {
-        Card cardToBeBlocked = cardRepository.findById(findCardIdByCarNumber(cardNumber))
+        Card cardToBeBlocked = cardRepository.findById(findCardIdByCardNumber(cardNumber))
                 .orElseThrow(() -> new RuntimeException("The Card with the Card Number" + cardNumber + " is not valid"));
         if (checkIfCardIsActive(cardNumber)) {
             cardToBeBlocked.setStatus(Status.BLOCKED);
@@ -68,7 +73,7 @@ public class CardService {
     @Transactional
     public void unblockCard(long cardNumber) {
 
-        Card cardToBeUnblocked = cardRepository.findById(findCardIdByCarNumber(cardNumber))
+        Card cardToBeUnblocked = cardRepository.findById(findCardIdByCardNumber(cardNumber))
                 .orElseThrow(() -> new RuntimeException("The Card with the Card Number" + cardNumber + " is not valid"));
         if (!checkIfCardIsActive(cardNumber)) {
             cardToBeUnblocked.setStatus(Status.ACTIVE);
@@ -98,7 +103,7 @@ public class CardService {
     }
 
     public boolean checkIfCardIsActive(long cardNumber) {
-        if (findStatusById(findCardIdByCarNumber(cardNumber)).equals(Status.ACTIVE)) {
+        if (findStatusById(findCardIdByCardNumber(cardNumber)).equals(Status.ACTIVE)) {
             return true;
         } else {
             return false;
@@ -107,12 +112,9 @@ public class CardService {
 
     public Card findCardByCardNumber(long cardNumber) {
 
-        List<Card> listCards = findAllCards()
-                .stream()
-                .filter(card -> card.getCardNumber() == cardNumber)
-                .collect(Collectors.toList());
-
-        return listCards.get(0);
+       return cardRepository.findById(branchRepository.findIdByCardNumber(cardNumber))
+               .orElseThrow(()->new RuntimeException("The card Number you have provided is not valid\n" +
+                       "Please try again"));
 
     }
 
@@ -136,10 +138,10 @@ public class CardService {
     }
 
     public void deleteCardByCardNumber(long cardNumber) {
-        Card cardToBeDeleted = cardRepository.findById(findCardIdByCarNumber(cardNumber))
+        Card cardToBeDeleted = cardRepository.findById(findCardIdByCardNumber(cardNumber))
                 .orElseThrow(() -> new RuntimeException("The card with the Card Number " + cardNumber + " does not txists"));
         branchRepository.addDeletedCardToTable(cardToBeDeleted.getIban(), cardNumber);
-        cardRepository.deleteById(findCardIdByCarNumber(cardNumber));
+        cardRepository.deleteById(findCardIdByCardNumber(cardNumber));
         System.out.println("The card with the Card Number " + cardNumber + " was successfully deleted");
 
     }

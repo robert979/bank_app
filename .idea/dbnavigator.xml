@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="72fb7b79-76ab-4801-8581-250dfb44b116">
-        <schema name="bank" object-types="table, function, dataset trigger, procedure, index, column, constraint, view" />
+        <schema name="bank" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>

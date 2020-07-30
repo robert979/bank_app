@@ -29,7 +29,7 @@ public class CardController {
     @GetMapping("/cardNumber/{cardNumber}")
     @ResponseStatus(HttpStatus.OK)
     public long findIdByCardNumber(@PathVariable("cardNumber")long cardNumber){
-        return cardService.findCardIdByCarNumber(cardNumber);
+        return cardService.findCardIdByCardNumber(cardNumber);
     }
     @GetMapping("/status/{cardNumber}")
     @ResponseStatus(HttpStatus.OK)

@@ -21,6 +21,7 @@ public class BranchRepository {
     private static final String deletedAccount = "deleted_account";
     private static final String cardNumberTable = "card_number";
     private static final String deletedCard = "deleted_card";
+    private static final String cardTable = "card";
 
 
     //metode  IBAN
@@ -214,9 +215,19 @@ public class BranchRepository {
         return id;
     }
 
-    public long cardNumberToBeUsed(int id) {
-        return 0;
-    }
+    @SneakyThrows
+    public long findIdByCardNumber(long cardNumber){
+        long id=0;
+        String query = "select id from " + cardTable + " id where card_number=?";
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        preparedStatement.setLong(1, cardNumber);
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()){
+            id=rs.getLong("id");
+
+        }
+        return id;
+ }
 
     private PreparedStatement getPreparedStatement(String query) {
         try {
@@ -233,6 +244,8 @@ public class BranchRepository {
 
 
     public static void main(String[] args) {
+        BranchRepository branchRepository=new BranchRepository();
+        System.out.println("doar pt test " + branchRepository.findIdByCardNumber(1234123412340000L));
 
 
     }
