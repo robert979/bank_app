@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Entity;
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Repository
 @Data
@@ -211,6 +214,17 @@ public class BranchRepository {
             id = rs.getInt("min(id)");
         }
         return id;
+    }
+
+    @SneakyThrows
+    public void setLastUpdate (Date date, long id){
+        String query = "Update " + cardTable + " set Last_updated = ? where id = ?";
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        preparedStatement.setDate(1,date);
+        preparedStatement.setLong(2, id);
+        preparedStatement.executeUpdate();
+
+
     }
 
     @SneakyThrows

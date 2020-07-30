@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class CardService {
         newCard.setPin(1234);
         newCard.setStatus(Status.ACTIVE);
         newCard.setLastUpdated(LocalDateTime.now());
+        newCard.setExpirationDate(LocalDateTime.now().plusYears(2));
         return cardRepository.save(newCard);
     }
 
@@ -90,6 +93,7 @@ public class CardService {
         if (cardToChangePin.getPin() == initialPin && initialPin !=newPin){
             if (newPin == newPinAgain){
                 cardToChangePin.setPin(newPin);
+                cardToChangePin.setLastUpdated(LocalDateTime.now());
                 System.out.println("The Pin was successfully changed \n" +
                         "The new pin number is " + cardToChangePin.getPin());
             } else {
@@ -138,6 +142,8 @@ public class CardService {
                         "Please contact our bank helpDesk");
                 flag =0;
                 branchRepository.blockCard(findCardIdByCardNumber(cardNumber));
+               // branchRepository.setLastUpdate(Date.valueOf(LocalDateTime.now().toLocalDate()), findCardIdByCardNumber(cardNumber));
+                findCardByCardNumber(cardNumber).setLastUpdated(LocalDateTime.now());
             }
 
 
