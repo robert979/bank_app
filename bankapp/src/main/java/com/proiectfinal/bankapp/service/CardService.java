@@ -146,4 +146,20 @@ public class CardService {
 
     }
 
+    public boolean checkExpirationDate (long cardNumber) {
+            if (LocalDateTime.now().isBefore(findCardByCardNumber(cardNumber).getExpirationDate())) {
+                if (LocalDateTime.now().isAfter(findCardByCardNumber(cardNumber).getExpirationDate().plusMonths(6L))){
+                    System.out.println("The card will expire within the next 6 months");
+                }
+                return true;
+            } else {
+                System.out.println("Your card is expired");
+                return false;}
+            }
+
+
+
+
+
+
 }

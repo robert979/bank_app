@@ -26,6 +26,7 @@ public class Card {
     private Status status;
     private LocalDateTime creationDate;
     private LocalDateTime lastUpdated;
+    private LocalDateTime expirationDate;
 
 
 }
