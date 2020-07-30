@@ -106,8 +106,9 @@ public class CardService {
         if (findStatusById(findCardIdByCardNumber(cardNumber)).equals(Status.ACTIVE)) {
             return true;
         }
+        else {
             return false;
-
+        }
     }
 
     public Card findCardByCardNumber(long cardNumber) {
