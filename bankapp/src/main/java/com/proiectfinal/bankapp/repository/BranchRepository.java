@@ -51,8 +51,7 @@ public class BranchRepository {
     @SneakyThrows
     public String getFirstIbanNo() {
         BranchRepository branchRepository = new BranchRepository();
-        Long a = 0L;
-        String b = new String();
+        long a = 0L;
         String query = "select no_iban from " + ibanTableName + " where id=" + branchRepository.findFirstIbanId();
         PreparedStatement preparedStatement = getPreparedStatement(query);
 
@@ -60,8 +59,7 @@ public class BranchRepository {
         while ((rs.next())) {
             a = rs.getLong("no_iban");
         }
-        b = String.valueOf(a);
-        return b;
+        return String.valueOf(a);
 
     }
 
@@ -240,6 +238,15 @@ public class BranchRepository {
             throw new RuntimeException("Error while getting connection", throwable);
 
         }
+    }
+    @SneakyThrows
+    public void blockExpiredCard (long id){
+        String query = "update " + cardTable + " set status = 'blocked' where id =?";
+        PreparedStatement preparedStatement = getPreparedStatement(query);
+        preparedStatement.setLong(1, id);
+
+        preparedStatement.executeUpdate();
+
     }
 
 

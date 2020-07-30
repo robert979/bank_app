@@ -105,9 +105,9 @@ public class CardService {
     public boolean checkIfCardIsActive(long cardNumber) {
         if (findStatusById(findCardIdByCardNumber(cardNumber)).equals(Status.ACTIVE)) {
             return true;
-        } else {
-            return false;
         }
+            return false;
+
     }
 
     public Card findCardByCardNumber(long cardNumber) {
@@ -153,7 +153,9 @@ public class CardService {
                 }
                 return true;
             } else {
-                System.out.println("Your card is expired");
+                System.out.println("Your card is expired\n" +
+                        "Your card will be blocked");
+                branchRepository.blockExpiredCard(findCardIdByCardNumber(cardNumber));
                 return false;}
             }
 
