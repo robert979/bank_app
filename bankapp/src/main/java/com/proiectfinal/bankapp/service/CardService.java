@@ -105,10 +105,9 @@ public class CardService {
     public boolean checkIfCardIsActive(long cardNumber) {
         if (findStatusById(findCardIdByCardNumber(cardNumber)).equals(Status.ACTIVE)) {
             return true;
-        }
-        else {
-            return false;
-        }
+        }else {
+          return false;}
+
     }
 
     public Card findCardByCardNumber(long cardNumber) {
