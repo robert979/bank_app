@@ -240,7 +240,7 @@ public class BranchRepository {
         }
     }
     @SneakyThrows
-    public void blockExpiredCard (long id){
+    public void blockCard(long id){
         String query = "update " + cardTable + " set status = 'blocked' where id =?";
         PreparedStatement preparedStatement = getPreparedStatement(query);
         preparedStatement.setLong(1, id);

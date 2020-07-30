@@ -1,8 +1,6 @@
 package com.proiectfinal.bankapp.controller;
 
 import com.proiectfinal.bankapp.domain.Account;
-import com.proiectfinal.bankapp.domain.User;
-import com.proiectfinal.bankapp.repository.BranchRepository;
 import com.proiectfinal.bankapp.service.AccountService;
 import com.proiectfinal.bankapp.service.CardService;
 import lombok.AllArgsConstructor;
@@ -10,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController

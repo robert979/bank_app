@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -65,8 +65,8 @@ public class CardService {
             cardToBeBlocked.setStatus(Status.BLOCKED);
             cardToBeBlocked.setLastUpdated(LocalDateTime.now());
         } else {
-            System.out.println("The Card with the Card Number + " + cardNumber + " is already Blocked " + flag);
-            flag = flag + 1;
+            System.out.println("The Card with the Card Number + " + cardNumber + " is already Blocked " );
+
         }
     }
 
@@ -80,8 +80,8 @@ public class CardService {
             cardToBeUnblocked.setLastUpdated(LocalDateTime.now());
 
         } else {
-            System.out.println("The Card with the Card Number + " + cardNumber + " is already Active " + flag);
-            flag = flag + 1;
+            System.out.println("The Card with the Card Number + " + cardNumber + " is already Active " );
+
         }
     }
     @Transactional
@@ -101,7 +101,6 @@ public class CardService {
                     "Please try again");
         }
     }
-
     public boolean checkIfCardIsActive(long cardNumber) {
         if (findStatusById(findCardIdByCardNumber(cardNumber)).equals(Status.ACTIVE)) {
             return true;
@@ -112,25 +111,42 @@ public class CardService {
 
     public Card findCardByCardNumber(long cardNumber) {
 
-       return cardRepository.findById(branchRepository.findIdByCardNumber(cardNumber))
+       return cardRepository.findById(findCardIdByCardNumber(cardNumber))
                .orElseThrow(()->new RuntimeException("The card Number you have provided is not valid\n" +
                        "Please try again"));
-
     }
 
     public boolean checkIfOkForWithdraw(long cardNumber, int pin) {
         if (checkIfCardIsActive(cardNumber)) {
+
             if (findCardByCardNumber(cardNumber).getPin() == pin) {
                 return true;
+          } else if (cardNumber != tempCard) {
+              tempCard = cardNumber;
+              flag = 0;
+              System.out.println("The pin it's incorrect, please try again \n" +
+                      "You have 2 more attempts, before your card will be blocked");
+              flag=2;
+              return false;
+          } else if (flag!=3) {
+              flag += 1;
+              System.out.println("The pin it's incorrect, please try again\n" +
+                      "You have one more attempt to provide the right pin, otherwise your card will be blocked");
+              return false;
             } else {
-                System.out.println("The pin it's incorrect, please try again " + flag);
+                System.out.println("You have provided 3 times an incorrect pin, therefore your card is blocked\n" +
+                        "Please contact our bank helpDesk");
+                flag =0;
+                branchRepository.blockCard(findCardIdByCardNumber(cardNumber));
+            }
+
+
+        }  else {
+                System.out.println("Your Card with the Card Number " + cardNumber + " is blocked\n" +
+                        "The withdraw operation was aborted");
                 return false;
             }
-        } else {
-            System.out.println("Your Card with the Card Number " + cardNumber + " is blocked\n" +
-                    "The withdraw operation was aborted");
-            return false;
-        }
+                   return false;
     }
 
     public String findIbanByCardNumber(long cardNumber) {
@@ -155,7 +171,7 @@ public class CardService {
             }else {
                 System.out.println("Your card is expired\n" +
                         "Your card will be blocked");
-                branchRepository.blockExpiredCard(findCardIdByCardNumber(cardNumber));
+                branchRepository.blockCard(findCardIdByCardNumber(cardNumber));
                 return false;}
             }
 
