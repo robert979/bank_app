@@ -147,12 +147,12 @@ public class CardService {
     }
 
     public boolean checkExpirationDate (long cardNumber) {
-            if (LocalDateTime.now().isBefore(findCardByCardNumber(cardNumber).getExpirationDate())) {
-                if (LocalDateTime.now().isAfter(findCardByCardNumber(cardNumber).getExpirationDate().plusMonths(6L))){
+            if (LocalDateTime.now().isBefore(findCardByCardNumber(cardNumber).getExpirationDate().minusMonths(6))) {
+                    return true;
+            } else if((LocalDateTime.now().isBefore(findCardByCardNumber(cardNumber).getExpirationDate()))) {
                     System.out.println("The card will expire within the next 6 months");
-                }
-                return true;
-            } else {
+                    return true;
+            }else {
                 System.out.println("Your card is expired\n" +
                         "Your card will be blocked");
                 branchRepository.blockExpiredCard(findCardIdByCardNumber(cardNumber));
